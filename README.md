@@ -1,5 +1,5 @@
-# api-script-authenticate
-Example script to run through prompting a user for their login info and authenticating the user into an instance of Plextrac.
+# bulk-ptrac-import
+Prompts the user through selecting or creating a new client, selecting 1 or more PTRAC files, and import each PTRAC as a new report in the choosen client.
 
 # Requirements
 - [Python 3+](https://www.python.org/downloads/)
@@ -17,17 +17,16 @@ pipenv install //this will create a virtual env and install all the dependancies
 # Usage
 After the Python environment is setup, you can run the script with the following command. You should be in the folder where you cloned the repo when running the following.
 ```bash
-pipenv run python example_authenticate.py
+pipenv run python main.py
 ```
+
+# Config
+You can add the following values to the config.yaml file. If a value is not set, you will be prompted to enter it when the script runs.
 
 ## Required Information
 - PlexTrac Top Level Domain e.g. https://yourapp.plextrac.com
 - Username
 - Password
 - MFA Token (if enabled)
-
-## Script Execution Flow
-- Prompts user for Plextrac instance URL
-  - Validate URL points to a running instance of Plextrac
-- Prompts user for username, password, and mfa (if applicable)
-- Calls authenticate endpoints and stores Authoirzation headers for future use
+- Client Name
+- file path to folder contain PTRACs to import
