@@ -46,8 +46,26 @@ class LogFormatHandler():
     """
     A class to act as an interface to the python logger and handle adding font colors depending on log level
     """
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self, stream_level, file_level=logging.WARN, output_to_file=False):
+        LOGS_FILE_PATH = f'logs_{time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime(time.time()))}.txt'
+
+        lger = logging.getLogger()
+        lger.setLevel(logging.DEBUG) # do not change - logging level set individually below
+
+        stdo = logging.StreamHandler()
+        stdo.setLevel(stream_level)
+        fmer = logging.Formatter('%(asctime)s %(message)s')
+        stdo.setFormatter(fmer)
+        lger.addHandler(stdo)
+
+        if output_to_file:
+            fhdr = logging.FileHandler(LOGS_FILE_PATH, "w")
+            fhdr.setLevel(file_level)
+            cfmer = TermEscapeCodeFormatter('%(asctime)s %(message)s')
+            fhdr.setFormatter(cfmer)
+            lger.addHandler(fhdr)
+
+        self.logger = lger
 
     def debug(self, message):
         self.logger.debug(ColorPrint.print_purple(f'[DEBUG] {message}'))
@@ -86,24 +104,7 @@ def print_script_info():
 
 
 
-LOGS_FILE_PATH = f'logs_{time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime(time.time()))}.txt'
-
-lger = logging.getLogger()
-lger.setLevel(logging.DEBUG) # do not change - set logging level individually below
-
-stdo = logging.StreamHandler()
-stdo.setLevel(logging.INFO) # logging level for terminal output
-
-fhdr = logging.FileHandler(LOGS_FILE_PATH, "w")
-fhdr.setLevel(logging.WARN) # logging level for file output
-
-fmer = logging.Formatter('%(asctime)s %(message)s')
-stdo.setFormatter(fmer)
-cfmer = TermEscapeCodeFormatter('%(asctime)s %(message)s')
-fhdr.setFormatter(cfmer)
-
-lger.addHandler(stdo)
-# lger.addHandler(fhdr) # uncomment to create a text file and save logs
-
-log = LogFormatHandler(lger)
+console_log_level = logging.INFO
+file_log_level = logging.WARN
+log = LogFormatHandler(console_log_level, file_log_level, output_to_file=True) # change out_to_file to write console logs to file
 
